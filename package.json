@@ -4,7 +4,8 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "postinstall": "npm rebuild --target=2.0.0 --runtime=electron --dist-url=https://atom.io/download/electron"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -18,5 +19,9 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^2.0.0"
+  },
+  "dependencies": {
+    "google-protobuf": "^3.6.1",
+    "grpc": "^1.13.1"
   }
 }

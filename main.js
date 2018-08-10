@@ -7,7 +7,14 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({
+    width: 800, 
+    height: 600,
+    webPreferences: {
+      // sandbox: true,
+      // nodeIntegration: false,
+    },
+  })
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -48,3 +55,39 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+var messages = require('./example/helloworld_pb');
+var services = require('./example/helloworld_grpc_pb');
+var grpc = require('grpc');
+const { performance } = require('perf_hooks');
+
+function runGRPCTest() {
+  var client = new services.GreeterClient(
+    'localhost:50051',
+    grpc.credentials.createInsecure()
+  );
+  var results = [];
+  var count = 100;
+  var interval = 10;
+  var id = setInterval(() => {
+    var request = new messages.HelloRequest();
+    request.setName('');
+    var start = performance.now();
+    client.sayHello(request, function(err, response) {
+      var end = performance.now();
+      var delta = end - start;
+      //console.log('Greeting:', response.getMessage(), delta);
+      if (results.length < count) {
+        results.push(delta);
+      } else if (results.length === count) {
+        clearInterval(id);
+        var avg = results.reduce((accum, current) => {
+          return accum + current;
+        }, 0) / results.length;
+        console.log(`Average roundtrip ${avg} ms`);
+      }
+    });
+  }, interval);
+}
+
+runGRPCTest();
