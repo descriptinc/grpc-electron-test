@@ -5,9 +5,16 @@
 var messages = require('./example/helloworld_pb');
 var services = require('./example/helloworld_grpc_pb');
 var grpc = require('grpc');
+var { ipcRenderer } = require('electron');
 
-function grpcTestFinished(avg) {
-  document.querySelector('h1').textContent =
+function grpcMainTestFinished(emitter, avg) {
+  console.log(avg);
+  document.querySelector('.main').textContent =
+    `Average roundtrip (running in main): ${Math.round(avg * 100, 2) / 100}ms`;
+}
+
+function grpcRendererTestFinished(avg) {
+  document.querySelector('.renderer').textContent =
     `Average roundtrip (running in renderer): ${Math.round(avg * 100, 2) / 100}ms`;
 }
 
@@ -43,4 +50,7 @@ function runGRPCTest(callback) {
   }, interval);
 }
 
-runGRPCTest(grpcTestFinished);
+runGRPCTest(grpcRendererTestFinished);
+
+ipcRenderer.on('GRPC_TEST', grpcMainTestFinished);
+ipcRenderer.send('GRPC_TEST');

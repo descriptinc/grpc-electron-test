@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -10,10 +10,6 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800, 
     height: 600,
-    webPreferences: {
-      // sandbox: true,
-      // nodeIntegration: false,
-    },
   })
 
   // and load the index.html of the app.
@@ -28,6 +24,12 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
+  });
+
+  ipcMain.on('GRPC_TEST', (event) => {
+    runGRPCTest((avg) => {
+      mainWindow.webContents.send('GRPC_TEST', avg);
+    });
   })
 }
 
@@ -61,7 +63,7 @@ var services = require('./example/helloworld_grpc_pb');
 var grpc = require('grpc');
 const { performance } = require('perf_hooks');
 
-function runGRPCTest() {
+function runGRPCTest(callback) {
   var client = new services.GreeterClient(
     'localhost:50051',
     grpc.credentials.createInsecure()
@@ -69,6 +71,7 @@ function runGRPCTest() {
   var results = [];
   var count = 100;
   var interval = 10;
+  var logged = false;
   var id = setInterval(() => {
     var request = new messages.HelloRequest();
     request.setName('');
@@ -79,15 +82,15 @@ function runGRPCTest() {
       //console.log('Greeting:', response.getMessage(), delta);
       if (results.length < count) {
         results.push(delta);
-      } else if (results.length === count) {
+      } else if (!logged && results.length === count) {
+        logged = true;
         clearInterval(id);
         var avg = results.reduce((accum, current) => {
           return accum + current;
         }, 0) / results.length;
         console.log(`Average roundtrip ${avg} ms`);
+        callback(avg);
       }
     });
   }, interval);
 }
-
-runGRPCTest();
