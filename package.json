@@ -4,7 +4,7 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "./node_modules/.bin/electron .",
     "postinstall": "./node_modules/.bin/electron-rebuild"
   },
   "repository": "https://github.com/electron/electron-quick-start",
@@ -19,10 +19,11 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^3.0.0-beta.4",
-    "electron-rebuild": "^1.8.2"
+    "electron-rebuild": "^1.8.2",
+    "grpc": "^1.14.0"
   },
   "dependencies": {
-    "google-protobuf": "^3.6.1",
-    "grpc": "^1.13.1"
+    "@grpc/grpc-js": "^0.2.0",
+    "google-protobuf": "^3.6.1"
   }
 }

@@ -26,6 +26,7 @@ var grpc = require('grpc');
  */
 function sayHello(call, callback) {
   var reply = new messages.HelloReply();
+  console.log('Got sayHello message', call.request.getName());
   reply.setMessage('Hello ' + call.request.getName());
   callback(null, reply);
 }

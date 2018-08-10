@@ -1,6 +1,6 @@
 var messages = require('./example/helloworld_pb');
 var services = require('./example/helloworld_grpc_pb');
-var grpc = require('grpc');
+var grpc = require('@grpc/grpc-js');
 const { performance } = require('perf_hooks');
 
 function grpcTest(callback) {
