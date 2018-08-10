@@ -30,6 +30,8 @@ Average roundtrip (running in renderer): 1.33ms
 
 I'm guessing that this is somehow related to the different way that Windows and Mac/Linux implement the node.js runtime binding in the renderer process, i.e., https://github.com/electron/electron/blob/master/atom/common/node_bindings_win.cc vs. https://github.com/electron/electron/blob/master/atom/common/node_bindings_mac.cc
 
+------
+
 # electron-quick-start (original readme)
 
 **Clone and run for a quick way to see Electron in action.**
