@@ -1,4 +1,36 @@
-# electron-quick-start
+# grpc-electron-test
+
+A `grpc-node` message roundtrip is slow when running on a renderer process of Electron on Windows. This repo is a demonstration of that.
+
+To run:
+
+```bash
+yarn install
+# in one terminal
+node example/greeter_server.js
+# in another terminal
+yarn start
+```
+
+It runs the same gRPC test in the main process and in the renderer process and then shows the results in the renderer BrowserWindow. It computes the average roundtrip time for a simple gRPC message (200 messages, sent at an interval of 10 ms. The problem persists even if the interval is much greater).
+
+On Windows I get a result like:
+
+```
+Average gRPC roundtrip (running in main): 0.62ms
+Average gRPC roundtrip (running in renderer): 145.94ms
+```
+
+While on macOS I get a result like:
+
+```
+Average roundtrip (running in main): 1.29ms
+Average roundtrip (running in renderer): 1.33ms
+```
+
+I'm guessing that this is somehow related to the different way that Windows and Mac/Linux implement the node.js runtime binding in the renderer process, i.e., https://github.com/electron/electron/blob/master/atom/common/node_bindings_win.cc vs. https://github.com/electron/electron/blob/master/atom/common/node_bindings_mac.cc
+
+# electron-quick-start (original readme)
 
 **Clone and run for a quick way to see Electron in action.**
 
