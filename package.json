@@ -18,10 +18,11 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^2.0.0"
+    "electron": "^2.0.0",
+    "grpc": "^1.13.1"
   },
   "dependencies": {
-    "google-protobuf": "^3.6.1",
-    "grpc": "^1.13.1"
+    "@grpc/grpc-js": "^0.2.0",
+    "google-protobuf": "^3.6.1"
   }
 }
